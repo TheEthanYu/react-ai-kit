@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import { Message } from '../types'
+import { StreamResponse } from '../../StreamResponse'
 
 export interface MessageItemProps {
   /** 消息数据 */
@@ -42,9 +43,20 @@ export const MessageItem: FC<MessageItemProps> = ({ message, className = '', sho
   return (
     <div className={messageClass}>
       <div className='ai-chat-message__content'>
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]}>
-          {message.content}
-        </ReactMarkdown>
+        {message.streaming ? (
+          <StreamResponse
+            content={message.content}
+            streaming={true}
+            typingSpeed={30}
+            onComplete={() => {
+              // 可以在这里处理流式响应完成的逻辑
+            }}
+          />
+        ) : (
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+            {message.content}
+          </ReactMarkdown>
+        )}
       </div>
       {message.error && <div className='ai-chat-message__error'>{message.error}</div>}
       {showTime && <div className='ai-chat-message__time'>{formattedTime}</div>}

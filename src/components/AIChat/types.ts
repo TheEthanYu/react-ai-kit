@@ -1,8 +1,9 @@
 export interface Message {
   id: string
   content: string
-  role: 'user' | 'assistant' | 'system' // 添加 system 类型
+  role: 'user' | 'assistant' | 'system'
   timestamp: number
-  status?: 'sending' | 'sent' | 'error' // 添加消息状态
-  error?: string // 错误信息
+  status?: 'sending' | 'sent' | 'error'
+  error?: string
+  streaming?: boolean
 }
